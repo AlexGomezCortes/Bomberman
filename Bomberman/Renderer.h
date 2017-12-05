@@ -9,14 +9,14 @@ class Renderer
 {
 
 private:
-	SDL_Window* m_window;
-	SDL_Renderer* m_renderer;
+	SDL_Window* m_window=nullptr;
+	SDL_Renderer* m_renderer=nullptr;
 	std::map <int, SDL_Texture*> m_images;
 	std::map <int, Text> m_messages;
-
+	static Renderer *renderer;
 
 public:
-	static Renderer* renderer;
+	
 	static Renderer* Instance();
 
 	Renderer();
@@ -31,6 +31,8 @@ public:
 	void Clear();
 	void Render();
 
+	SDL_Renderer* getRenderer() { return m_renderer; }
+	SDL_Window* getWindow() { return m_window; }
 
 
 

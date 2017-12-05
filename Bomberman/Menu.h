@@ -18,5 +18,7 @@ private:
 	void eventHandler() override;
 	void update() override;
 	void draw() override;
+
+	Button* play;
 };
 

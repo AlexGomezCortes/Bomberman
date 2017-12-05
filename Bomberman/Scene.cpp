@@ -2,6 +2,7 @@
 
 Scene::Scene()
 {
+	active = true;
 }
 
 
@@ -20,3 +21,5 @@ void Scene::update()
 void Scene::draw()
 {
 }
+
+bool Scene::isRunning() { return active; }

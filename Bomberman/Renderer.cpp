@@ -2,7 +2,7 @@
 
 Renderer::Renderer()
 {
-	m_window = SDL_CreateWindow("BOMBERMAN", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 500, SDL_WINDOW_SHOWN);
+	m_window = SDL_CreateWindow("BOMBERMAN", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
 	const Uint8 imgFlags{ IMG_INIT_PNG | IMG_INIT_JPG };
@@ -70,3 +70,4 @@ int Renderer::loadText(Text c)
 	return 0;
 }
 
+Renderer* Renderer::renderer = nullptr;
