@@ -14,7 +14,7 @@ public:
 	bool isHovered();
 	void eventHandler(SDL_Event evnt);
 	void update();
-	void draw(Text& a);
+	void draw();
 
 public:
 	Text message;

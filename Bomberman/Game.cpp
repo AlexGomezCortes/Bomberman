@@ -5,6 +5,7 @@
 Game::Game()
 {
 	currentScene = new Menu();
+
 }
 
 
@@ -16,15 +17,17 @@ void Game::run()
 {
 	while (currentScene->isRunning())
 	{
+		updateScene();
+
 		Renderer::Instance()->Clear();
 		currentScene->eventHandler();	
-		update();
 		currentScene->update();
+		currentScene->draw();
 		Renderer::Instance()->Render();
 	}
 }
 
-void Game::update()
+void Game::updateScene()
 {
 	switch (currentScene->CurrentGameState)
 	{
@@ -36,6 +39,8 @@ void Game::update()
 		break;
 	case GAME_STATE::PLAY:
 		currentScene = new Play();
+		break;
+	default:
 		break;
 	}
 }

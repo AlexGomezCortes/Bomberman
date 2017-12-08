@@ -11,7 +11,7 @@ Player::Player()
 	Sprite.placeholder.w = 70;
 	Sprite.placeholder.h = 70;
 
-	Renderer::Instance()->loadIMG(Sprite.path, spriteid);
+	//Renderer::Instance()->loadIMG(Sprite.path, spriteid);
 
 	spriteid2 = 2;
 	Sprite2.path = "../res/img/player2.png";
@@ -20,7 +20,7 @@ Player::Player()
 	Sprite2.placeholder.w = 70;
 	Sprite2.placeholder.h = 70;	
 
-	Renderer::Instance()->loadIMG(Sprite2.path, spriteid2);
+	//Renderer::Instance()->loadIMG(Sprite2.path, spriteid2);
 }
 
 

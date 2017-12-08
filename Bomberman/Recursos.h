@@ -8,12 +8,12 @@ using Color = struct Color { Uint8 r; Uint8 g; Uint8 b; Uint8 a; };
 
 struct Text
 {
-	std::string path;
-    const char* msg;
-	int size;
+	std::string path; //path de la fuente
+    std::string msg;  //lo que se quiere escribir
+	int size;		  //tamaño de la fuente
+	SDL_Rect placeHolder; //rectángulo en el que se escribirá
+	SDL_Color color;		//color del texto
 	int id;
-	SDL_Rect placeHolder;
-	SDL_Color color;
 };
 
 struct Rect {

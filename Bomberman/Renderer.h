@@ -15,9 +15,12 @@ private:
 	SDL_Renderer* m_renderer=nullptr;
 	static Renderer *renderer;
 
+	unsigned int nextKey;
+
 public:
 
 	std::map <int, SDL_Texture*> m_images;
+
 	std::map <int, Text> m_messages;
 	std::map <int, TTF_Font*> m_fonts;
 	
@@ -25,15 +28,10 @@ public:
 
 	Renderer();
 	~Renderer();
-	void renderIMG(int id, const SDL_Rect &rect);
-	void renderTXT(Text a, SDL_Texture* b);
-	SDL_Texture* editIMG(int id);
-	void loadIMG(std::string path, int id); 
-	Text* editText(int f);
-	void loadFont(Text text);
 
-	Text SaiyanText;
-	Text GameoverText;
+	int loadIMG(std::string path);
+	int loadText(Text text);
+	void renderIMG(int id, const SDL_Rect &rect);
 
 	void Clear();
 	void Render();

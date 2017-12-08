@@ -14,6 +14,6 @@ public:
 	bool running;
 
 	void run();
-	void update();
+	void updateScene();
 };
 
