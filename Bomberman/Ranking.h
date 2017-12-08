@@ -14,5 +14,7 @@ private:
 	void update() override;
 	void draw() override;
 
+	Button* Back;
+
 };
 

@@ -15,6 +15,8 @@ public:
 	~Play();
 
 private:
+
+	Image BG;
 	HUD interfaz;
 	std::pair <Player, Player> users;
 	std::deque <Bomba> bombList;

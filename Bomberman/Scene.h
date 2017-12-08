@@ -16,7 +16,7 @@ public:
 	virtual void draw();
 
 	bool isRunning();
-	GAME_STATE CurrentGameState;
+	GAME_STATE CurrentGameState=GAME_STATE::MENU;
 
 protected:
 	SDL_Texture* BG;

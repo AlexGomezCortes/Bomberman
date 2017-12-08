@@ -59,6 +59,12 @@ void Button::update()
 	}	
 }
 
-void Button::draw()
+void Button::draw(Text& a) //le pasamos una variable de tipo Text porque los botones tienen Text, que contiene el color, el rectangulo, el path, el tamaño, el texto etc
 {
+	SDL_Surface* surfaceMessage = TTF_RenderText_Blended(Renderer::Instance()->m_fonts[a.id], a.msg, a.color);
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(Renderer::Instance()->getRenderer(), surfaceMessage);
+	
+	Renderer::Instance()->renderTXT(a, Message);
+	SDL_FreeSurface(surfaceMessage);
+    //SDL_RenderCopy(Renderer::Instance()->getRenderer(), Message, NULL, &a.placeHolder);
 }

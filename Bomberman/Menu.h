@@ -13,14 +13,14 @@ public:
 	
 private:
 	Text titulo;
-	int BG_id;
-	SDL_Rect BG_Rect;
-	std::string path;
+	Image BG;
 
 	void eventHandler() override;
 	void update() override;
 	void draw() override;
 
 	Button* play;
+	Button* exit;
+	Button* ranking;
 };
 

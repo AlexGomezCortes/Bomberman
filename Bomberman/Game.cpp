@@ -19,20 +19,25 @@ void Game::run()
 		Renderer::Instance()->Clear();
 		currentScene->eventHandler();	
 		update();
+		currentScene->update();
 		Renderer::Instance()->Render();
 	}
 }
 
 void Game::update()
 {
-	std::cout << int(currentScene->CurrentGameState) << std::endl;
-
-	if (currentScene->CurrentGameState == GAME_STATE::PLAY)
+	switch (currentScene->CurrentGameState)
 	{
-		std::cout << "entro play" << std::endl;
+	/*case GAME_STATE::MENU:   si pongo esto no funciona nada del sistema de escenas, y no se porque, si lo pongo dentro de un if dentro del case ranking, funcionan todas las escenas menos la del ranking, enytra en esta y sale automaticamente, sin esperar a que le des al boton de back
+		currentScene = new Menu();
+		break;*/
+	case GAME_STATE::RNKING:
+		currentScene = new Ranking();
+		break;
+	case GAME_STATE::PLAY:
 		currentScene = new Play();
+		break;
 	}
-	currentScene->update();
 }
 
 
