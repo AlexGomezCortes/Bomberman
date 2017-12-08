@@ -15,7 +15,9 @@ public:
 	~Play();
 
 private:
-	HUD interfaz;
+	Player* one;
+	Player* two;
+	HUD* interfaz;
 
 	std::pair <Player, Player> users;
 
@@ -24,7 +26,6 @@ private:
 	int BG_id;
 	std::string path;
 	SDL_Rect BG_Rect;
-	Player* ReferenceToPlayer;
 
 	void eventHandler() override;
 	void update() override;

@@ -25,8 +25,7 @@ void Game::run()
 
 void Game::update()
 {
-	std::cout << int(currentScene->CurrentGameState) << std::endl;
-
+	
 	if (currentScene->CurrentGameState == GAME_STATE::PLAY)
 	{
 		std::cout << "entro play" << std::endl;

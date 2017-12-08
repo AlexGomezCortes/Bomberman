@@ -25,5 +25,7 @@ struct Image {
 	SDL_Rect placeholder; //esto tiene que ser un sdl rect  en vez de tipo struct rect porque sino no podemos pasarlo como argumento a las funciones del renderer
 };
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 500;
+const int SCREEN_WIDTH = 720;
+const int SCREEN_HEIGHT = 704;
+
+const float GAMETIME = 60.f;

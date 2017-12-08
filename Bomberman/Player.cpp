@@ -7,12 +7,9 @@ Player::Player()
 	spriteid = 2;
 	spriteSheet.path= "../res/img/player1.png"; //hay que montarse algo para las animaciones
 
-	/*Sprite.placeholder.x = 300;
-	Sprite.placeholder.y = 200;
-	Sprite.placeholder.w = 70;
-	Sprite.placeholder.h = 70;*/
-
-	//Renderer::Instance()->loadIMG(Sprite.path, spriteid);
+	score = 0;
+	vidas = 3;
+	position.first = position.second = 0;
 
 }
 

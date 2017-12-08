@@ -4,7 +4,7 @@
 class HUD
 {
 public:
-	HUD();
+	HUD(Player* &uno, Player* &dos);
 	~HUD();
 private:
 	float countDown;
@@ -12,5 +12,10 @@ private:
 	std::pair <int, int> score;
 	Player* JugadorUno;
 	Player* JugadorDos;
+
+	Text score1;
+	Text score2;
+	Text vida1;
+	Text vida2;
 };
 

@@ -4,6 +4,11 @@
 
 Play::Play()
 {
+	one = new Player();
+	two = new Player();
+
+	interfaz = new HUD(one, two);
+
 	path = "../res/img/bgGame.jpg";
 	BG_id = 2;
 	BG_Rect.x = BG_Rect.y = 0;
