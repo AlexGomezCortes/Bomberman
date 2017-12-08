@@ -70,4 +70,10 @@ int Renderer::loadText(Text c)
 	return 0;
 }
 
+std::pair<int, int> Renderer::getTextureDimensions(int id) {
+	int w, h;
+	SDL_QueryTexture(m_images[id], NULL, NULL, &w, &h);
+	return std::make_pair(w, h);
+}
+
 Renderer* Renderer::renderer = nullptr;

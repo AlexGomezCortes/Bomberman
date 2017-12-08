@@ -27,6 +27,7 @@ public:
 	void loadIMG(std::string path, int id); //supongo que devuelve un int porque los maps tienen un int como key
 	void renderText(int e);
 	Text* editText(int f);
+	std::pair<int, int> getTextureDimensions(int id);
 
 	void Clear();
 	void Render();

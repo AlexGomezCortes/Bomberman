@@ -16,10 +16,14 @@ public:
 
 private:
 	HUD interfaz;
+
 	std::pair <Player, Player> users;
+
 	std::deque <Bomba> bombList;
 	Casilla*** board;
-	int playBG_id;
+	int BG_id;
+	std::string path;
+	SDL_Rect BG_Rect;
 	Player* ReferenceToPlayer;
 
 	void eventHandler() override;

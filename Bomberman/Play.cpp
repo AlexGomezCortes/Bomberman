@@ -4,7 +4,14 @@
 
 Play::Play()
 {
-	ReferenceToPlayer = new Player();
+	path = "../res/img/bgGame.jpg";
+	BG_id = 2;
+	BG_Rect.x = BG_Rect.y = 0;
+	BG_Rect.w = SCREEN_WIDTH;
+	BG_Rect.h = SCREEN_HEIGHT;
+
+	Renderer::Instance()->loadIMG(path, BG_id);
+
 }
 
 
@@ -28,7 +35,8 @@ void Play::eventHandler()
 
 void Play::update()
 {
-	ReferenceToPlayer->draw();
+
+	Renderer::Instance()->renderIMG(BG_id, BG_Rect);
 }
 
 void Play::draw()

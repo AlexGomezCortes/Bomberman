@@ -18,15 +18,10 @@ public:
 private:
 	
 	int spriteid;
-	Image Sprite;
-
-	int spriteid2;
-	Image Sprite2;
+	Image spriteSheet;
+	SDL_Rect currentSprite;
 
 	Bomba CrearBomba();
 	void harm() override;
-	
-	
-
 };
 
