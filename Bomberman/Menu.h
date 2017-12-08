@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
-#include "Recursos.h"
 #include "Scene.h"
+#include "Button.h"
 #include "Renderer.h"
 
 class Menu : public Scene
@@ -9,6 +9,8 @@ class Menu : public Scene
 public:
 	Menu();
 	~Menu();
+
+	
 private:
 	Text titulo;
 	int BG_id;

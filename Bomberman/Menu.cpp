@@ -14,8 +14,8 @@ Menu::Menu()
 
 	play = new Button();
 	play->message.placeHolder.x = play->message.placeHolder.y = 0;
-	play->message.placeHolder.w = SCREEN_WIDTH / 2;
-	play->message.placeHolder.h = SCREEN_HEIGHT / 2;
+	play->message.placeHolder.w = 200; //por probar
+	play->message.placeHolder.h = 100;
 }
 
 
@@ -42,7 +42,10 @@ void Menu::eventHandler()
 void Menu::update()
 {
 	play->update();
-
+	if (play->isClicked() == true)
+	{
+		CurrentGameState = GAME_STATE::PLAY;
+	}
 	Renderer::Instance()->renderIMG(BG_id, BG_Rect);
 }
 

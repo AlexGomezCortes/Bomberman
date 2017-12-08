@@ -1,5 +1,6 @@
 #pragma once
 #include "Casilla.h"
+#include "Renderer.h"
 #include "Bomba.h"
 
 class Player : public Casilla
@@ -10,13 +11,22 @@ public:
 
 	void eventHandler();
 	std::pair<int, int>* move();
+
+	void update() override;
+	void draw() override;
+
 private:
 	
 	int spriteid;
+	Image Sprite;
+
+	int spriteid2;
+	Image Sprite2;
+
 	Bomba CrearBomba();
 	void harm() override;
-	void update() override;
-	void draw() override;
+	
+	
 
 };
 

@@ -16,10 +16,13 @@ public:
 	virtual void draw();
 
 	bool isRunning();
+	GAME_STATE CurrentGameState;
 
 protected:
 	SDL_Texture* BG;
 	std::deque <Button> buttonList;
 	bool active;
+	
+	
 };
 
