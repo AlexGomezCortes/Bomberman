@@ -42,6 +42,12 @@ void Play::update()
 	interfaz->update();
 	users.first->update();
 	users.second->update();
+
+	if(users.first->getSpeed().first!=0 || users.first->getSpeed().second != 0) //tremen cacao vamos a tener para comprobar todas las colisiones
+		users.first->correctPosition(users.second);
+	if (users.second->getSpeed().first != 0 || users.second->getSpeed().second != 0)
+		users.second->correctPosition(users.first);
+	
 }
 
 void Play::draw()

@@ -17,13 +17,9 @@ private:
 
 	unsigned int nextKey;
 
-public:
-
 	std::map <int, SDL_Texture*> m_images;
 
-	std::map <int, Text> m_messages;
-	std::map <int, TTF_Font*> m_fonts;
-	
+public:
 	static Renderer* Instance();
 
 	Renderer();
@@ -31,6 +27,7 @@ public:
 
 	int loadIMG(std::string path);
 	int loadText(Text text);
+	std::pair<int, std::pair<int, int>> loadSpriteSheet(std::string path, int spritesInX, int spritesInY);
 	void loadText(Text text, int id);
 	void renderIMG(int id, const SDL_Rect &rect);
 

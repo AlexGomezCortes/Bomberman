@@ -8,7 +8,7 @@ Renderer::Renderer()
 	m_window = SDL_CreateWindow("BOMBERMAN", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-	const Uint8 imgFlags{ IMG_INIT_PNG | IMG_INIT_JPG };
+	const Uint8 imgFlags{ IMG_INIT_PNG | IMG_INIT_JPG};
 
 
 	nextKey = 0;
@@ -63,6 +63,18 @@ int Renderer::loadText(Text text)
 	m_images[nextKey] = myTexture;
 	
 	return nextKey++;
+}
+
+std::pair<int, std::pair<int, int>> Renderer::loadSpriteSheet(std::string path, int spritesInX, int spritesInY) {
+	SDL_Texture* myTexture = IMG_LoadTexture(m_renderer, path.c_str());
+	int w, h;
+	int lmao = 0;
+	SDL_QueryTexture(myTexture, NULL, NULL, &w, &h);
+	w /= spritesInX;
+	h /= spritesInY;
+
+	m_images[nextKey] = myTexture;
+	return std::make_pair(nextKey++, std::make_pair(w, h));
 }
 
 void Renderer::loadText(Text text, int id) {

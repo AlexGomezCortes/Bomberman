@@ -18,6 +18,8 @@ public:
 	void moveX(int delta);
 	void moveY(int delta);
 	std::pair<int, int> getPos();
+	std::pair<int, int> getSpeed() { return speed; }
+
 
 private:
 	Bomba CrearBomba();
