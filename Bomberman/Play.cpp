@@ -27,6 +27,15 @@ Play::Play()
 				board[i][j]->photo.placeholder.x = i * 48;
 				board[i][j]->photo.placeholder.y = j * 48 + 80;
 			}
+			else if ((j == 2 || j == 4 || j == 6 || j == 8 || j == 10) && (i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12)) {
+				board[i][j] = new Bloque();
+				board[i][j]->photo.placeholder.x = i * 48;
+				board[i][j]->photo.placeholder.y = j * 48 + 80;
+			}
+			else {
+				board[i][j] = nullptr;
+			}
+			
 		}
 	}
 }
@@ -65,9 +74,9 @@ void Play::update()
 	
 	for (int i = 0; i < 15; ++i) {
 		for (int j = 0; j < 13; ++j) {
-			if (i == 0 || i == 14 || j == 0 || j == 12) {
-				users.first->correctPosition(board[i][j]);
-				users.second->correctPosition(board[i][j]);
+			if (board[i][j] != nullptr) {
+					users.first->correctPosition(board[i][j]);
+					users.second->correctPosition(board[i][j]);
 			}
 		}
 	}
@@ -82,7 +91,7 @@ void Play::draw()
 
 	for (int i = 0; i < 15; ++i) {
 		for (int j = 0; j < 13; ++j) {
-			if (i == 0 || i == 14 || j == 0 || j == 12) 
+			if(board[i][j]!=nullptr)
 				board[i][j]->draw();
 		}
 	}

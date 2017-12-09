@@ -3,8 +3,7 @@
 
 
 Bloque::Bloque()
-{
-}
+{}
 
 
 Bloque::~Bloque()

@@ -2,6 +2,8 @@
 #include "Casilla.h"
 #include "Renderer.h"
 #include "Bomba.h"
+#include <time.h>
+#include <stdlib.h>
 
 class Player : public Casilla
 {
@@ -30,5 +32,9 @@ public:
 private:
 	std::pair<int, int> speed;
 	bool isPJ1;
+	std::pair<int, int> spriteCoordinate;
+	float lastTime;
+	float counter;
+	int local;
 };
 

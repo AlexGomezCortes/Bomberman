@@ -10,7 +10,7 @@ public:
 	Casilla();
 	~Casilla();
 
-	std::pair<int, int> getCenter(SDL_Rect other);
+	std::pair<int, int> getCenter();
 	bool doCollide(Casilla other);
 	void correctPosition(Casilla* other);
 

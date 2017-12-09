@@ -18,13 +18,14 @@ Player::Player(int num) //añadir switch que gestione si se crea un player 1 o un
 		photo.placeholder.x = SCREEN_WIDTH-48*2;
 		photo.placeholder.y = SCREEN_HEIGHT-48*2;
 	}
-	photo.placeholder.w = 48;
-	photo.placeholder.h = 48;
 
 	photo.id=Renderer::Instance()->loadSpriteSheet(photo.path, 3, 4);
 
 	vidas = 3;
 	score = 0;
+
+	lastTime = 0;
+	counter = 0.5f;
 }
 
 
@@ -71,11 +72,7 @@ void Player::update()
 {
 	moveX(speed.first);
 	moveY(speed.second);
-}
 
-void Player::draw()
-{
-	std::pair<int, int> spriteCoordinate;
 	switch (speed.first) {
 	case -1: spriteCoordinate.second = 1;
 		break;
@@ -93,7 +90,22 @@ void Player::draw()
 	case 1: spriteCoordinate.second = 2;
 		break;
 	}
+	float deltaTime = clock() - lastTime;
 
+	if (speed.first != 0 || speed.second != 0) {
+		counter += deltaTime*0.005;
+		if (counter >= 3)
+			counter = 0;
+		spriteCoordinate.first = static_cast<int>(counter);
+	}
+	else
+		counter = 0;
+
+	lastTime = clock();
+}
+
+void Player::draw()
+{
 	Renderer::Instance()->renderSprite(photo.id, photo.placeholder, spriteCoordinate);
 }
 
