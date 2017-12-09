@@ -4,13 +4,19 @@
 class HUD
 {
 public:
-	HUD();
+	HUD(std::pair<Player*, Player*> users);
 	~HUD();
 private:
 	float countDown;
 	std::pair <int, int> vidas;
 	std::pair <int, int> score;
-	Player* JugadorUno;
-	Player* JugadorDos;
+	std::pair<Player*, Player*> m_users;
+
+	std::pair <Text, Text> displayScore;
+	std::pair <Text, Text> displayVidas;
+
+public:
+	void update();
+	void draw();
 };
 

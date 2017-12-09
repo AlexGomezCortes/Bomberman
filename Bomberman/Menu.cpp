@@ -2,7 +2,7 @@
 
 Menu::Menu()
 {
-	BG.path = "../res/img/bgGame.jpg";
+	BG.path = PATH_BG;
 	BG.placeholder.x = 0;
 	BG.placeholder.y = 0;
 	BG.placeholder.w = SCREEN_WIDTH;
@@ -10,32 +10,51 @@ Menu::Menu()
 
 	BG.id=Renderer::Instance()->loadIMG(BG.path);
 
-	play = new Button();                                            //declaramos todos los botones
-	play->message.placeHolder.w = 100; 
-	play->message.placeHolder.h = 50;
-	play->message.placeHolder.x = SCREEN_WIDTH/2-play->message.placeHolder.w/2;
-	play->message.placeHolder.y = SCREEN_HEIGHT*0.25;
-	play->message.size = 20;
-	play->message.color = { 0,0,0,255 };
-	play->message.msg = "PLAY";
+	playOne = new Button();                                            
+	Text reset;
+	reset.path = PATH_SAIYAN;
+	reset.placeHolder.w = 100;
+	reset.placeHolder.h = 50;
+	reset.placeHolder.x = SCREEN_WIDTH/2- reset.placeHolder.w/2;
+	reset.placeHolder.y = SCREEN_HEIGHT*0.2;
+	reset.size = 200;
+	reset.color = { 0,255,0,255 };
+	reset.msg = "PLAY ONE";
+
+	playOne->resetText(reset);
+
+	playTwo = new Button(); 
+	reset.placeHolder.w = 100;
+	reset.placeHolder.h = 50;
+	reset.placeHolder.x = SCREEN_WIDTH / 2 - reset.placeHolder.w / 2;
+	reset.placeHolder.y = SCREEN_HEIGHT*0.4;
+	reset.size = 200;
+	reset.color = { 0,255,0,255 };
+	reset.msg = "PLAY TWO";
+
+	playTwo->resetText(reset);
 
 	ranking = new Button();
-	ranking->message.placeHolder.w = 100;
-	ranking->message.placeHolder.h = 50;
-	ranking->message.placeHolder.x = SCREEN_WIDTH / 2 - ranking->message.placeHolder.w / 2;
-	ranking->message.placeHolder.y = SCREEN_HEIGHT*0.5;
-	ranking->message.size = 20;
-	ranking->message.color = { 0,0,0,1 };
-	ranking->message.msg = "RANKING";
+	reset.placeHolder.w = 100;
+	reset.placeHolder.h = 50;
+	reset.placeHolder.x = SCREEN_WIDTH / 2 - reset.placeHolder.w / 2;
+	reset.placeHolder.y = SCREEN_HEIGHT*0.6;
+	reset.size = 200;
+	reset.color = { 0,0,255,255 };
+	reset.msg = "RANKING";
+
+	ranking->resetText(reset);
 
 	exit = new Button();
-	exit->message.placeHolder.w = 100;
-	exit->message.placeHolder.h = 50;
-	exit->message.placeHolder.x = SCREEN_WIDTH / 2 - exit->message.placeHolder.w / 2;
-	exit->message.placeHolder.y = SCREEN_HEIGHT*0.75;
-	exit->message.size = 20;
-	exit->message.color = { 0,0,0, 1};
-	exit->message.msg = "EXIT";
+	reset.placeHolder.w = 100;
+	reset.placeHolder.h = 50;
+	reset.placeHolder.x = SCREEN_WIDTH / 2 - reset.placeHolder.w / 2;
+	reset.placeHolder.y = SCREEN_HEIGHT*0.8;
+	reset.size = 200;
+	reset.color = { 255,0,0,255 };
+	reset.msg = "EXIT";
+
+	exit->resetText(reset);
 }
 
 
@@ -55,21 +74,21 @@ void Menu::eventHandler()
 			break;
 		}
 
-		if (play->isClicked() == true)
+		if (playOne->isClicked() || playTwo->isClicked())
 		{
 			CurrentGameState = GAME_STATE::PLAY;
 		}
-		if (ranking->isClicked() == true)
+		if (ranking->isClicked())
 		{
-			CurrentGameState = GAME_STATE::RNKING;
-			std::cout << "entro ranking" << std::endl;
+			CurrentGameState = GAME_STATE::RANKING;
 		}
-		if (exit->isClicked() == true)
+		if (exit->isClicked())
 		{
-			Renderer::Instance()->~Renderer();
+			active = false;
 		}
 
-		play->eventHandler(evnt);
+		playOne->eventHandler(evnt);
+		playTwo->eventHandler(evnt);
 		ranking->eventHandler(evnt);
 		exit->eventHandler(evnt);
 	}
@@ -77,7 +96,8 @@ void Menu::eventHandler()
 
 void Menu::update()
 {
-	play->update();
+	playOne->update();
+	playTwo->update();
 	ranking->update();
 	exit->update();
 
@@ -92,7 +112,8 @@ void Menu::draw()
 
 	Renderer::Instance()->renderIMG(BG.id, BG.placeholder);
 
-	play->draw();
+	playOne->draw();
+	playTwo->draw();
 	ranking->draw();
 	exit->draw();
 }

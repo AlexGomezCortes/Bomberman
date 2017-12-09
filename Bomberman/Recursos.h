@@ -2,7 +2,7 @@
 #include <String>
 #include <SDL.h>
 
-enum class GAME_STATE{MENU, RNKING, PLAY}; //asi podemos saber en que estado se encuentra el juego desde cualquier clase
+enum class GAME_STATE{MENU, RANKING, PLAY, STAY}; //asi podemos saber en que estado se encuentra el juego desde cualquier clase
 
 using Color = struct Color { Uint8 r; Uint8 g; Uint8 b; Uint8 a; };
 
@@ -26,9 +26,14 @@ struct Rect {
 struct Image {
 	std::string path;
 	SDL_Rect placeholder; //esto tiene que ser un sdl rect  en vez de tipo struct rect porque sino no podemos pasarlo como argumento a las funciones del renderer
-	SDL_Texture* Tex;
 	int id;
 };
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 500;
+const int SCREEN_WIDTH = 720;
+const int SCREEN_HEIGHT = 704;
+
+static const char* PATH_BG= "../res/img/bgGame.jpg"; 
+static const char* PATH_SAIYAN = "../res//ttf/saiyan.ttf";
+static const char* PATH_GAMEOVER = "../res//ttf/game_over.ttf";
+
+const int HUD_X_MARGIN = 40;

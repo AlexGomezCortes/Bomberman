@@ -4,13 +4,16 @@
 
 Play::Play()
 {
-	ReferenceToPlayer = new Player();
+	bg.placeholder.x = 0;
+	bg.placeholder.y = 0;
+	bg.placeholder.w = SCREEN_WIDTH;
+	bg.placeholder.h = SCREEN_HEIGHT;
+	bg.path = PATH_BG;
 
-	BG.id = 1;
-	BG.placeholder.x = 0;
-	BG.placeholder.y = 0;
-	BG.placeholder.w = SCREEN_WIDTH;
-	BG.placeholder.h = SCREEN_HEIGHT;
+	users.first = new Player(1);
+	users.second = new Player(2);
+
+	interfaz = new HUD(users);
 }
 
 
@@ -34,10 +37,15 @@ void Play::eventHandler()
 
 void Play::update()
 {
-	Renderer::Instance()->renderIMG(BG.id, BG.placeholder);
-	ReferenceToPlayer->draw();	
+	interfaz->update();
 }
 
 void Play::draw()
 {
+	Renderer::Instance()->renderIMG(bg.id, bg.placeholder);
+	
+	users.first->draw();
+	users.second->draw();
+
+	interfaz->draw();
 }

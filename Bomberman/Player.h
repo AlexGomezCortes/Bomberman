@@ -6,7 +6,8 @@
 class Player : public Casilla
 {
 public:
-	Player();
+	Player() {};
+	Player(int num);
 	~Player();
 
 	void eventHandler();
@@ -16,17 +17,14 @@ public:
 	void draw() override;
 
 private:
-	
-	int spriteid;
 	Image Sprite;
-
-	int spriteid2;
-	Image Sprite2;
 
 	Bomba CrearBomba();
 	void harm() override;
-	
-	
+
+public:
+	int vidas;
+	int score;
 
 };
 

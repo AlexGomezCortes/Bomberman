@@ -5,7 +5,6 @@
 Game::Game()
 {
 	currentScene = new Menu();
-
 }
 
 
@@ -31,14 +30,17 @@ void Game::updateScene()
 {
 	switch (currentScene->CurrentGameState)
 	{
-	/*case GAME_STATE::MENU:   si pongo esto no funciona nada del sistema de escenas, y no se porque, si lo pongo dentro de un if dentro del case ranking, funcionan todas las escenas menos la del ranking, enytra en esta y sale automaticamente, sin esperar a que le des al boton de back
+	case GAME_STATE::MENU:   //si pongo esto no funciona nada del sistema de escenas, y no se porque, si lo pongo dentro de un if dentro del case ranking, funcionan todas las escenas menos la del ranking, enytra en esta y sale automaticamente, sin esperar a que le des al boton de back
 		currentScene = new Menu();
-		break;*/
-	case GAME_STATE::RNKING:
+		currentScene->CurrentGameState = GAME_STATE::STAY;
+		break;
+	case GAME_STATE::RANKING:
 		currentScene = new Ranking();
+		currentScene->CurrentGameState = GAME_STATE::STAY;
 		break;
 	case GAME_STATE::PLAY:
 		currentScene = new Play();
+		currentScene->CurrentGameState = GAME_STATE::STAY;
 		break;
 	default:
 		break;

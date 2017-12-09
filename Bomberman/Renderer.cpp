@@ -65,6 +65,14 @@ int Renderer::loadText(Text text)
 	return nextKey++;
 }
 
+void Renderer::loadText(Text text, int id) {
+	TTF_Font *ttfFont = TTF_OpenFont(text.path.c_str(), text.size);
+	SDL_Surface* mySurface = TTF_RenderText_Blended(ttfFont, text.msg.c_str(), text.color);
+	SDL_Texture* myTexture = SDL_CreateTextureFromSurface(m_renderer, mySurface);
+
+	m_images[id] = myTexture;
+}
+
 void Renderer::renderIMG(int id, const SDL_Rect &rect)
 {
 	SDL_RenderCopy(m_renderer, m_images[id], nullptr, &rect);

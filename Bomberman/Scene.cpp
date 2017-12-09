@@ -3,6 +3,7 @@
 Scene::Scene()
 {
 	active = true;
+	CurrentGameState = GAME_STATE::STAY;
 }
 
 

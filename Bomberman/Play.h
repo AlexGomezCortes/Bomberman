@@ -16,13 +16,11 @@ public:
 
 private:
 
-	Image BG;
-	HUD interfaz;
-	std::pair <Player, Player> users;
+	Image bg;
+	HUD *interfaz;
+	std::pair <Player*, Player*> users;
 	std::deque <Bomba> bombList;
 	Casilla*** board;
-	int playBG_id;
-	Player* ReferenceToPlayer;
 
 	void eventHandler() override;
 	void update() override;

@@ -6,7 +6,7 @@ Button::Button()
 {
 	leftClick = false;
 
-	message.path = "../res//ttf/saiyan.ttf";
+	message.path = PATH_SAIYAN;
 	message.size = 25;
 	message.msg = "HelloWorld";
 	message.color = SDL_Color{ 0, 0, 0, 255 };
@@ -43,6 +43,19 @@ bool Button::isHovered()
 		}
 	}
 	return false;
+}
+
+void Button::resetText(Text newcomer) {
+	message.path = newcomer.path;
+	message.size = newcomer.size;
+	message.msg = newcomer.msg;
+	message.color = newcomer.color;
+	message.placeHolder.x = newcomer.placeHolder.x;
+	message.placeHolder.y = newcomer.placeHolder.y;
+	message.placeHolder.w = newcomer.placeHolder.w;
+	message.placeHolder.h = newcomer.placeHolder.h;
+
+	Renderer::Instance()->loadText(message, message.id);
 }
 
 void Button::eventHandler( SDL_Event evnt)

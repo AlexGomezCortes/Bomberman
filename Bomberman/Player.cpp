@@ -2,25 +2,18 @@
 
 
 
-Player::Player()
+Player::Player(int num) //añadir switch que gestione si se crea un player 1 o un player 2
 {
-	spriteid = 2;
-	Sprite.path= "../res/img/player1.png";
+	Sprite.path= "../res/img/test.png";
 	Sprite.placeholder.x = 300;
 	Sprite.placeholder.y = 200;
 	Sprite.placeholder.w = 70;
 	Sprite.placeholder.h = 70;
 
-	//Renderer::Instance()->loadIMG(Sprite.path, spriteid);
+	Sprite.id=Renderer::Instance()->loadIMG(Sprite.path);
 
-	spriteid2 = 2;
-	Sprite2.path = "../res/img/player2.png";
-	Sprite2.placeholder.x = 500;
-	Sprite2.placeholder.y = 100;
-	Sprite2.placeholder.w = 70;
-	Sprite2.placeholder.h = 70;	
-
-	//Renderer::Instance()->loadIMG(Sprite2.path, spriteid2);
+	vidas = 3;
+	score = 0;
 }
 
 
@@ -53,6 +46,5 @@ void Player::update()
 
 void Player::draw()
 {
-	Renderer::Instance()->renderIMG(spriteid, Sprite.placeholder);
-	Renderer::Instance()->renderIMG(spriteid2, Sprite2.placeholder);
+	Renderer::Instance()->renderIMG(Sprite.id, Sprite.placeholder);
 }

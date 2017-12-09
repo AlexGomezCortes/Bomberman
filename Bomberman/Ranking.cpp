@@ -5,13 +5,13 @@
 Ranking::Ranking()
 {
 	Back = new Button();
-	Back->message.placeHolder.x = 650;
-	Back->message.placeHolder.y = 350;
-	Back->message.placeHolder.w = 100; //por probar
-	Back->message.placeHolder.h = 50;
-	Back->message.size = 20;
-	Back->message.color = { 0,0,0,1 };
-	Back->message.msg = "BACK";
+	//Back->message.placeHolder.x = 650;
+	//Back->message.placeHolder.y = 350;
+	//Back->message.placeHolder.w = 100; //por probar
+	//Back->message.placeHolder.h = 50;
+	//Back->message.size = 20;
+	//Back->message.color = { 0,0,0,1 };
+	//Back->message.msg = "BACK";
 }
 
 

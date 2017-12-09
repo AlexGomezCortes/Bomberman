@@ -19,7 +19,8 @@ private:
 	void update() override;
 	void draw() override;
 
-	Button* play;
+	Button* playOne;
+	Button* playTwo;
 	Button* exit;
 	Button* ranking;
 };

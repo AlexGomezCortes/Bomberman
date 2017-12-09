@@ -31,6 +31,7 @@ public:
 
 	int loadIMG(std::string path);
 	int loadText(Text text);
+	void loadText(Text text, int id);
 	void renderIMG(int id, const SDL_Rect &rect);
 
 	void Clear();

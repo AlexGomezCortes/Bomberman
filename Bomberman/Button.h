@@ -16,10 +16,10 @@ public:
 	void update();
 	void draw();
 
-public:
-	Text message;
+	void resetText(Text newcomer);
 
 private:
+	Text message;
 	bool leftClick;
 };
 
