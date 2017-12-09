@@ -108,8 +108,6 @@ void Menu::update()
 
 void Menu::draw()
 {
-	
-
 	Renderer::Instance()->renderIMG(BG.id, BG.placeholder);
 
 	playOne->draw();

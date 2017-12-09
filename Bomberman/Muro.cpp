@@ -3,7 +3,9 @@
 
 
 Muro::Muro()
-{}
+{
+	whoIam = TIPO_CASILLA::MURO;
+}
 
 
 Muro::~Muro()

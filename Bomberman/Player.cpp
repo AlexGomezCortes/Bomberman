@@ -25,7 +25,10 @@ Player::Player(int num) //añadir switch que gestione si se crea un player 1 o un
 	score = 0;
 
 	lastTime = 0;
-	counter = 0.5f;
+	counter = 0;
+
+	whoIam = TIPO_CASILLA::PLAYER;
+	canBomb = true;
 }
 
 
@@ -50,6 +53,11 @@ void Player::eventHandler()
 			speed.first = -1;
 		else
 			speed.first = 0;
+
+		if (keyboardState[SDL_SCANCODE_SPACE] && canBomb) {
+			myBomb = new Bomba(getCenter());
+			canBomb = false;
+		}
 	}
 	else {
 		if (keyboardState[SDL_SCANCODE_UP])
@@ -64,8 +72,12 @@ void Player::eventHandler()
 			speed.first = 1;
 		else
 			speed.first = 0;
-	}
 
+		if (keyboardState[SDL_SCANCODE_RCTRL] && canBomb) {
+			myBomb = new Bomba(getCenter());
+			canBomb = false;
+		}
+	}
 }
 
 void Player::update()
@@ -123,13 +135,12 @@ std::pair<int, int> Player::getPos() {
 	return std::make_pair(photo.placeholder.x, photo.placeholder.y);
 }
 
-Bomba Player::CrearBomba()
-{
-	return Bomba();
-}
 
 void Player::harm()
 {
+	std::cout << "1 pupa" << std::endl;
 }
+
+
 
 

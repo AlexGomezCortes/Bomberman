@@ -6,6 +6,7 @@
 #include "Bomba.h"
 #include "Muro.h"
 #include "Bloque.h"
+#include "Explosion.h"
 #include <deque>
 #include "Button.h"
 #include "Renderer.h"
@@ -21,7 +22,7 @@ private:
 	Image bg;
 	HUD *interfaz;
 	std::pair <Player*, Player*> users;
-	std::deque <Bomba> bombList;
+	std::pair <Bomba*, Bomba*> bombList;
 	Casilla*** board;
 
 	void eventHandler() override;

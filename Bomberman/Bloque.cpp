@@ -3,7 +3,9 @@
 
 
 Bloque::Bloque()
-{}
+{
+	whoIam = TIPO_CASILLA::BLOQUE;
+}
 
 
 Bloque::~Bloque()

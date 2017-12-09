@@ -4,6 +4,8 @@
 
 enum class GAME_STATE{MENU, RANKING, PLAY, STAY}; //asi podemos saber en que estado se encuentra el juego desde cualquier clase
 
+enum class TIPO_CASILLA{MURO, BLOQUE, PLAYER, BOMBA, NADA};
+
 using Color = struct Color { Uint8 r; Uint8 g; Uint8 b; Uint8 a; };
 
 struct Text
@@ -38,5 +40,6 @@ static const char* PATH_GAMEOVER = "../res/ttf/game_over.ttf";
 static const char* PATH_ITEMS = "../res/img/items.png";
 static const char* PATH_PJ1 = "../res/img/player1.png";
 static const char* PATH_PJ2 = "../res/img/player2.png";
+static const char* PATH_EXPLOSION = "../res/img/explosion.png";
 
 const int HUD_X_MARGIN = 40;

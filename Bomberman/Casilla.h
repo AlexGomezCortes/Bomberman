@@ -20,5 +20,6 @@ public:
 
 	Image photo;
 	
+	TIPO_CASILLA whoIam;
 };
 

@@ -23,11 +23,13 @@ public:
 	std::pair<int, int> getSpeed() { return speed; }
 
 private:
-	Bomba CrearBomba();
+	
 
 public:
 	int vidas;
 	int score;
+	bool canBomb;
+	Bomba* myBomb;
 
 private:
 	std::pair<int, int> speed;
