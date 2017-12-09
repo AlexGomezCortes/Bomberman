@@ -10,6 +10,19 @@ HUD::HUD(std::pair<Player*, Player*> users) : m_users{ users }
 	vidas.first = m_users.first->vidas;
 	vidas.second = m_users.second->vidas;
 
+	timer = PLAYTIME;
+
+	displayTime.path = PATH_GAMEOVER;
+	displayTime.size = 200;
+	displayTime.color = { 0, 0, 0, 255 };
+	displayTime.msg = "0";
+	displayTime.placeHolder.w = 100;
+	displayTime.placeHolder.h = 100;
+	displayTime.placeHolder.x = SCREEN_WIDTH/2 - displayTime.placeHolder.w/2;
+	displayTime.placeHolder.y = -20;
+	displayTime.id = Renderer::Instance()->loadText(displayTime);
+
+	lastTime = clock();
 
 	//SCORE
 	displayScore.first.path = PATH_GAMEOVER;
@@ -61,6 +74,8 @@ HUD::~HUD()
 }
 
 void HUD::update() {
+	float deltaTime = clock() - lastTime;
+
 	displayScore.first.msg = "Vidas: " + std::to_string(m_users.first->score);
 	Renderer::Instance()->loadText(displayScore.first, displayScore.first.id);
 	displayScore.second.msg = "Vidas: " + std::to_string(m_users.second->score);
@@ -70,6 +85,12 @@ void HUD::update() {
 	Renderer::Instance()->loadText(displayVidas.first, displayVidas.first.id);
 	displayVidas.second.msg = "Score: " + std::to_string(m_users.second->vidas);
 	Renderer::Instance()->loadText(displayVidas.second, displayVidas.second.id);
+
+	timer -= deltaTime;
+	displayTime.msg = std::to_string(static_cast<int>(timer/1000));
+	Renderer::Instance()->loadText(displayTime, displayTime.id);
+
+	lastTime = clock();
 }
 
 void HUD::draw() {
@@ -78,4 +99,6 @@ void HUD::draw() {
 
 	Renderer::Instance()->renderIMG(displayVidas.first.id, displayVidas.first.placeHolder);
 	Renderer::Instance()->renderIMG(displayVidas.second.id, displayVidas.second.placeHolder);
+
+	Renderer::Instance()->renderIMG(displayTime.id, displayTime.placeHolder);
 }

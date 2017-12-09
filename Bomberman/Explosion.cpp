@@ -27,7 +27,7 @@ void Explosion::update()
 
 	lifeSpan -= deltaTime;
 	if (lifeSpan <= 0)
-		delete this;
+		killMe = true;
 
 	lastTime = clock();
 }

@@ -8,6 +8,8 @@ Casilla::Casilla()
 	photo.id = Renderer::Instance()->loadSpriteSheet(photo.path, 3, 2);
 
 	photo.placeholder.w = photo.placeholder.h= 48;
+
+	killMe = false;
 }
 
 

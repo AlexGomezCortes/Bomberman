@@ -18,6 +18,8 @@ public:
 	virtual void update();
 	virtual void draw();
 
+	bool killMe;
+
 	Image photo;
 	
 	TIPO_CASILLA whoIam;

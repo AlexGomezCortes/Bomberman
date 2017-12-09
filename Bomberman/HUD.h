@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 
+
 class HUD
 {
 public:
@@ -14,6 +15,10 @@ private:
 
 	std::pair <Text, Text> displayScore;
 	std::pair <Text, Text> displayVidas;
+
+	float timer;
+	float lastTime;
+	Text displayTime;
 
 public:
 	void update();

@@ -86,7 +86,11 @@ void Play::update()
 				board[i][j]->update();
 				if (!((i == users.first->getCenter().first / 48) && j == (users.first->getCenter().second - 80) / 48) && !((i == users.second->getCenter().first / 48) && j == (users.second->getCenter().second - 80) / 48) && (board[i][j]->whoIam==TIPO_CASILLA::PLAYER)) {
 					board[i][j] = nullptr; //CUANDO EL PLAYER SALE DE UNA CASILLA, ESTA DEJA DE APUNTAR A ÉL
-				}				
+				}	
+				if (board[i][j]!=nullptr) {
+					if (board[i][j]->killMe)
+						board[i][j] = nullptr;
+				}
 			}
 		}
 	}
@@ -96,10 +100,17 @@ void Play::update()
 		bombList.first->photo.placeholder.x = static_cast<int>((users.first->getCenter().first / 48.0f))*48;
 		bombList.first->photo.placeholder.y = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
 	}
+	else if (users.first->myBomb == nullptr && bombList.first == nullptr && !users.first->canBomb) {
+		users.first->canBomb = true;
+	}
+
 	if (users.second->myBomb != nullptr && bombList.second == nullptr) {
 		bombList.second = users.second->myBomb;
 		bombList.second->photo.placeholder.x = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
 		bombList.second->photo.placeholder.y = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
+	}
+	else if (users.second->myBomb == nullptr && bombList.second == nullptr && !users.second->canBomb) {
+		users.second->canBomb = true;
 	}
 
 	std::cout << static_cast<int>(((users.first->getCenter().second-80) / 48.0f))*48 << std::endl;
@@ -403,8 +414,9 @@ void Play::draw()
 
 	for (int i = 0; i < 15; ++i) {
 		for (int j = 0; j < 13; ++j) {
-			if(board[i][j]!=nullptr)
+			if (board[i][j] != nullptr) {
 				board[i][j]->draw();
+			}
 		}
 	}
 
