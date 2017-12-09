@@ -11,16 +11,21 @@ public:
 	~Player();
 
 	void eventHandler();
-	std::pair<int, int>* move();
-
 	void update() override;
 	void draw() override;
+	void harm() override;
+	
+	void moveX(int delta);
+	void moveY(int delta);
+	std::pair<int, int> getPos();
 
 private:
-	Image Sprite;
-
 	Bomba CrearBomba();
-	void harm() override;
+
+private:
+	std::pair<int, int> speed;
+
+	bool isPJ1;
 
 public:
 	int vidas;

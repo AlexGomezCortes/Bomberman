@@ -32,12 +32,16 @@ void Play::eventHandler()
 		case SDL_WINDOWEVENT_MOVED:
 			break;
 		}
+		users.first->eventHandler();
+		users.second->eventHandler();
 	}
 }
 
 void Play::update()
 {
 	interfaz->update();
+	users.first->update();
+	users.second->update();
 }
 
 void Play::draw()

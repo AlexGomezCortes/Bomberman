@@ -1,16 +1,15 @@
 #pragma once
 #include <deque>
 #include <SDL.h>
+#include "Recursos.h"
+
 class Casilla
 {
 public:
 	Casilla();
 	~Casilla();
 protected:
-	int spriteID;
-	std::deque <SDL_Texture*> sprites;
-private:
-	SDL_Rect placeHolder;
+	Image photo;
 	virtual void harm();
 	virtual void update();
 	virtual void draw();
