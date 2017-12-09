@@ -18,6 +18,7 @@ private:
 	unsigned int nextKey;
 
 	std::map <int, SDL_Texture*> m_images;
+	std::map <int, std::pair<int, int>> m_spriteData;
 
 public:
 	static Renderer* Instance();
@@ -27,9 +28,10 @@ public:
 
 	int loadIMG(std::string path);
 	int loadText(Text text);
-	std::pair<int, std::pair<int, int>> loadSpriteSheet(std::string path, int spritesInX, int spritesInY);
 	void loadText(Text text, int id);
+	int loadSpriteSheet(std::string path, int spritesInX, int spritesInY);
 	void renderIMG(int id, const SDL_Rect &rect);
+	void renderSprite(int id, const SDL_Rect &rect, std::pair<int, int> spriteCoor);
 
 	void Clear();
 	void Render();

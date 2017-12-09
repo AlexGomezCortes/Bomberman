@@ -4,12 +4,10 @@
 
 Casilla::Casilla()
 {
-	spriteSheetItems.path = PATH_ITEMS;
-	std::pair<int, std::pair<int, int>> temporal = Renderer::Instance()->loadSpriteSheet(spriteSheetItems.path, 3, 2);
-	spriteSheetItems.id = temporal.first;
-	spriteSheetItems.placeholder.w = temporal.second.first;
-	spriteSheetItems.placeholder.h = temporal.second.second;
-	
+	photo.path = PATH_ITEMS;
+	photo.id = Renderer::Instance()->loadSpriteSheet(photo.path, 3, 2);
+
+	photo.placeholder.w = photo.placeholder.h= 48;
 }
 
 

@@ -14,12 +14,11 @@ public:
 	bool doCollide(Casilla other);
 	void correctPosition(Casilla* other);
 
-
-protected:
-	Image photo;
-	Image spriteSheetItems;
 	virtual void harm();
 	virtual void update();
 	virtual void draw();
+
+	Image photo;
+	
 };
 

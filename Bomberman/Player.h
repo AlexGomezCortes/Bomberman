@@ -20,18 +20,15 @@ public:
 	std::pair<int, int> getPos();
 	std::pair<int, int> getSpeed() { return speed; }
 
-
 private:
 	Bomba CrearBomba();
-
-private:
-	std::pair<int, int> speed;
-
-	bool isPJ1;
 
 public:
 	int vidas;
 	int score;
 
+private:
+	std::pair<int, int> speed;
+	bool isPJ1;
 };
 

@@ -37,6 +37,6 @@ static const char* PATH_SAIYAN = "../res//ttf/saiyan.ttf";
 static const char* PATH_GAMEOVER = "../res/ttf/game_over.ttf";
 static const char* PATH_ITEMS = "../res/img/items.png";
 static const char* PATH_PJ1 = "../res/img/player1.png";
-static const char* PATH_PJ2 = "../res/img/player1.png";
+static const char* PATH_PJ2 = "../res/img/player2.png";
 
 const int HUD_X_MARGIN = 40;

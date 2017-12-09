@@ -4,6 +4,8 @@
 #include "Casilla.h"
 #include "Player.h"
 #include "Bomba.h"
+#include "Muro.h"
+#include "Bloque.h"
 #include <deque>
 #include "Button.h"
 #include "Renderer.h"

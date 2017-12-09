@@ -1,5 +1,6 @@
 #pragma once
-class Muro
+#include "Casilla.h"
+class Muro : public Casilla
 {
 public:
 	Muro();

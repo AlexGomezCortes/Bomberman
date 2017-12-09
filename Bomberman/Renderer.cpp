@@ -65,7 +65,7 @@ int Renderer::loadText(Text text)
 	return nextKey++;
 }
 
-std::pair<int, std::pair<int, int>> Renderer::loadSpriteSheet(std::string path, int spritesInX, int spritesInY) {
+int Renderer::loadSpriteSheet(std::string path, int spritesInX, int spritesInY) {
 	SDL_Texture* myTexture = IMG_LoadTexture(m_renderer, path.c_str());
 	int w, h;
 	int lmao = 0;
@@ -74,7 +74,8 @@ std::pair<int, std::pair<int, int>> Renderer::loadSpriteSheet(std::string path, 
 	h /= spritesInY;
 
 	m_images[nextKey] = myTexture;
-	return std::make_pair(nextKey++, std::make_pair(w, h));
+	m_spriteData[nextKey] = std::make_pair(w, h);
+	return nextKey++;
 }
 
 void Renderer::loadText(Text text, int id) {
@@ -88,6 +89,17 @@ void Renderer::loadText(Text text, int id) {
 void Renderer::renderIMG(int id, const SDL_Rect &rect)
 {
 	SDL_RenderCopy(m_renderer, m_images[id], nullptr, &rect);
+}
+
+void Renderer::renderSprite(int id, const SDL_Rect & rect, std::pair<int, int> spriteCoor)
+{
+	SDL_Rect local;
+	local.x=m_spriteData[id].first*spriteCoor.first;
+	local.y=m_spriteData[id].second*spriteCoor.second;
+	local.w = m_spriteData[id].first;
+	local.h = m_spriteData[id].second;
+
+	SDL_RenderCopy(m_renderer, m_images[id], &local, &rect);
 }
 
 

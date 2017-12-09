@@ -14,6 +14,21 @@ Play::Play()
 	users.second = new Player(2);
 
 	interfaz = new HUD(users);
+
+	board = new Casilla**[15];
+	for (int i = 0; i < 15; ++i) {
+		board[i] = new Casilla*[13];
+	}
+
+	for (int i = 0; i < 15; ++i) {
+		for (int j = 0; j < 13; ++j) {
+			if (i == 0 || i == 14 || j == 0 || j == 12) {
+				board[i][j] = new Bloque();
+				board[i][j]->photo.placeholder.x = i * 48;
+				board[i][j]->photo.placeholder.y = j * 48 + 80;
+			}
+		}
+	}
 }
 
 
@@ -48,6 +63,14 @@ void Play::update()
 	if (users.second->getSpeed().first != 0 || users.second->getSpeed().second != 0)
 		users.second->correctPosition(users.first);
 	
+	for (int i = 0; i < 15; ++i) {
+		for (int j = 0; j < 13; ++j) {
+			if (i == 0 || i == 14 || j == 0 || j == 12) {
+				users.first->correctPosition(board[i][j]);
+				users.second->correctPosition(board[i][j]);
+			}
+		}
+	}
 }
 
 void Play::draw()
@@ -56,6 +79,13 @@ void Play::draw()
 	
 	users.first->draw();
 	users.second->draw();
+
+	for (int i = 0; i < 15; ++i) {
+		for (int j = 0; j < 13; ++j) {
+			if (i == 0 || i == 14 || j == 0 || j == 12) 
+				board[i][j]->draw();
+		}
+	}
 
 	interfaz->draw();
 }

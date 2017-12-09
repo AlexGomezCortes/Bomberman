@@ -4,17 +4,24 @@
 
 Player::Player(int num) //añadir switch que gestione si se crea un player 1 o un player 2
 {
-	if (num == 1)
+	if (num == 1) {
 		isPJ1 = true;
-	else
-		isPJ1 = false;
-	photo.path= "../res/img/test.png";
-	photo.placeholder.x = 300;
-	photo.placeholder.y = 200;
-	photo.placeholder.w = 70;
-	photo.placeholder.h = 70;
 
-	photo.id=Renderer::Instance()->loadIMG(photo.path);
+		photo.path = PATH_PJ1;
+		photo.placeholder.x = 48;
+		photo.placeholder.y = 48+80;
+	}
+	else {
+		isPJ1 = false;
+
+		photo.path = PATH_PJ2;
+		photo.placeholder.x = SCREEN_WIDTH-48*2;
+		photo.placeholder.y = SCREEN_HEIGHT-48*2;
+	}
+	photo.placeholder.w = 48;
+	photo.placeholder.h = 48;
+
+	photo.id=Renderer::Instance()->loadSpriteSheet(photo.path, 3, 4);
 
 	vidas = 3;
 	score = 0;
@@ -68,7 +75,26 @@ void Player::update()
 
 void Player::draw()
 {
-	Renderer::Instance()->renderIMG(photo.id, photo.placeholder);
+	std::pair<int, int> spriteCoordinate;
+	switch (speed.first) {
+	case -1: spriteCoordinate.second = 1;
+		break;
+	case 0:
+		break;
+	case 1: spriteCoordinate.second = 3;
+		break;
+	}
+
+	switch (speed.second) {
+	case -1: spriteCoordinate.second = 0;
+		break;
+	case 0:
+		break;
+	case 1: spriteCoordinate.second = 2;
+		break;
+	}
+
+	Renderer::Instance()->renderSprite(photo.id, photo.placeholder, spriteCoordinate);
 }
 
 void Player::moveX(int delta)
