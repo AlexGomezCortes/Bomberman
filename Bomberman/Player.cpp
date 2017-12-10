@@ -10,6 +10,8 @@ Player::Player(int num) //añadir switch que gestione si se crea un player 1 o un
 		photo.path = PATH_PJ1;
 		photo.placeholder.x = 48;
 		photo.placeholder.y = 48+80;
+
+		whoIam = TIPO_CASILLA::PLAYER1;
 	}
 	else {
 		isPJ1 = false;
@@ -17,6 +19,8 @@ Player::Player(int num) //añadir switch que gestione si se crea un player 1 o un
 		photo.path = PATH_PJ2;
 		photo.placeholder.x = SCREEN_WIDTH-48*2;
 		photo.placeholder.y = SCREEN_HEIGHT-48*2;
+
+		whoIam = TIPO_CASILLA::PLAYER2;
 	}
 
 	photo.id=Renderer::Instance()->loadSpriteSheet(photo.path, 3, 4);
@@ -27,7 +31,7 @@ Player::Player(int num) //añadir switch que gestione si se crea un player 1 o un
 	lastTime = 0;
 	counter = 0;
 
-	whoIam = TIPO_CASILLA::PLAYER;
+	
 	canBomb = true;
 }
 
@@ -138,7 +142,7 @@ std::pair<int, int> Player::getPos() {
 
 void Player::harm()
 {
-	std::cout << "1 pupa" << std::endl;
+	vidas--;
 }
 
 

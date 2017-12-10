@@ -13,6 +13,8 @@ public:
 	void draw() override;
 	void update() override;
 
+	
+
 private:
 	float lastTime;
 	float lifeSpan;

@@ -4,7 +4,7 @@
 
 enum class GAME_STATE{MENU, RANKING, PLAY, STAY}; //asi podemos saber en que estado se encuentra el juego desde cualquier clase
 
-enum class TIPO_CASILLA{MURO, BLOQUE, PLAYER, BOMBA, NADA};
+enum class TIPO_CASILLA{MURO, BLOQUE, PLAYER1, PLAYER2, EXPLOSION, NADA};
 
 using Color = struct Color { Uint8 r; Uint8 g; Uint8 b; Uint8 a; };
 

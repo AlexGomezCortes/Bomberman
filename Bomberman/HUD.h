@@ -16,12 +16,14 @@ private:
 	std::pair <Text, Text> displayScore;
 	std::pair <Text, Text> displayVidas;
 
-	float timer;
+	
 	float lastTime;
 	Text displayTime;
 
 public:
 	void update();
 	void draw();
+
+	float timer;
 };
 

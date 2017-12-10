@@ -23,5 +23,7 @@ public:
 	Image photo;
 	
 	TIPO_CASILLA whoIam;
+
+	std::pair<int, int> spriteCoord;
 };
 

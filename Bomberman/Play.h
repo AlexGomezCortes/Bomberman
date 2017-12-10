@@ -10,6 +10,8 @@
 #include <deque>
 #include "Button.h"
 #include "Renderer.h"
+#include "string"
+
 
 class Play : public Scene
 {
@@ -28,6 +30,8 @@ private:
 	void eventHandler() override;
 	void update() override;
 	void draw() override;
+
+	float auxTime;
 
 };
 

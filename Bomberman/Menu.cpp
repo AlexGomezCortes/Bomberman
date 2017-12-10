@@ -100,10 +100,6 @@ void Menu::update()
 	playTwo->update();
 	ranking->update();
 	exit->update();
-
-	
-
-	
 }
 
 void Menu::draw()

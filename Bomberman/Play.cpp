@@ -28,7 +28,7 @@ Play::Play()
 				board[i][j]->photo.placeholder.y = j * 48 + 80;
 			}
 			else if ((j == 2 || j == 4 || j == 6 || j == 8 || j == 10) && (i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12)) {
-				board[i][j] = new Bloque();
+				board[i][j] = new Muro();
 				board[i][j]->photo.placeholder.x = i * 48;
 				board[i][j]->photo.placeholder.y = j * 48 + 80;
 			}
@@ -38,6 +38,8 @@ Play::Play()
 			
 		}
 	}
+
+	auxTime = 256;
 }
 
 
@@ -64,6 +66,8 @@ void Play::eventHandler()
 void Play::update()
 {
 	interfaz->update();
+	users.first->update();
+	users.second->update();
 
 	//ACTUALIZAR BOARD CON LOS PUNTEROS A LOS PLAYERS
 	board[users.first->getCenter().first / 48][(users.first->getCenter().second - 80) / 48] = users.first;
@@ -79,16 +83,54 @@ void Play::update()
 	for (int i = 0; i < 15; ++i) {
 		for (int j = 0; j < 13; ++j) {
 			if (board[i][j] != nullptr) {
-				if (board[i][j]->whoIam!=TIPO_CASILLA::PLAYER) {
+				if (board[i][j]->whoIam!=TIPO_CASILLA::PLAYER2 && board[i][j]->whoIam != TIPO_CASILLA::PLAYER1) {
 					users.first->correctPosition(board[i][j]);
 					users.second->correctPosition(board[i][j]);
 				}
 				board[i][j]->update();
-				if (!((i == users.first->getCenter().first / 48) && j == (users.first->getCenter().second - 80) / 48) && !((i == users.second->getCenter().first / 48) && j == (users.second->getCenter().second - 80) / 48) && (board[i][j]->whoIam==TIPO_CASILLA::PLAYER)) {
+				if (board[i][j]->whoIam == TIPO_CASILLA::EXPLOSION && board[i][j]->spriteCoord.second == -1) {
+					bool arr, abj, izq, der;
+					arr = abj = izq = der = false;
+					if (board[i + 1][j] != nullptr) {
+						if (board[i + 1][j]->whoIam == TIPO_CASILLA::EXPLOSION)
+							der = true;
+					}
+					if (board[i - 1][j] != nullptr) {
+						if (board[i - 1][j]->whoIam == TIPO_CASILLA::EXPLOSION)
+							izq = true;
+					}
+					if (board[i][j + 1] != nullptr) {
+						if (board[i][j + 1]->whoIam == TIPO_CASILLA::EXPLOSION)
+							arr = true;
+					}
+					if (board[i][j - 1] != nullptr) {
+						if (board[i][j - 1]->whoIam == TIPO_CASILLA::EXPLOSION)
+							abj = true;
+					}
+
+					if (!arr && !abj && !izq && der)//der
+						board[i][j]->spriteCoord.second = 1;
+					else if (!arr && !abj && izq && !der)//izq
+						board[i][j]->spriteCoord.second = 2;
+					else if (arr && !abj && !izq && !der)//arr
+						board[i][j]->spriteCoord.second = 3;
+					else if (!arr && abj && !izq && !der)//abj
+						board[i][j]->spriteCoord.second = 4;
+					else if (!arr && !abj && izq && der)//horizontal
+						board[i][j]->spriteCoord.second = 5;
+					else if (arr && abj && !izq && !der)//vertical
+						board[i][j]->spriteCoord.second = 6;
+					else//todas
+						board[i][j]->spriteCoord.second = 0;
+				}
+				if (((users.first->getCenter().first/48 != i) || ((users.first->getCenter().second-80)/48)!=j) && (board[i][j]->whoIam==TIPO_CASILLA::PLAYER1)) {
 					board[i][j] = nullptr; //CUANDO EL PLAYER SALE DE UNA CASILLA, ESTA DEJA DE APUNTAR A ÉL
-				}	
-				if (board[i][j]!=nullptr) {
-					if (board[i][j]->killMe)
+				}
+				else if (((users.second->getCenter().first / 48 != i) || ((users.second->getCenter().second - 80) / 48) != j) && (board[i][j]->whoIam == TIPO_CASILLA::PLAYER2)) {
+					board[i][j] = nullptr; //CUANDO EL PLAYER SALE DE UNA CASILLA, ESTA DEJA DE APUNTAR A ÉL
+				}
+				if (board[i][j]!=nullptr) { //CUANDO SE AGOTA EL TIEMPO DE VIDA DE UNA EXPLOSION
+					if (board[i][j]->killMe) 
 						board[i][j] = nullptr;
 				}
 			}
@@ -113,8 +155,6 @@ void Play::update()
 		users.second->canBomb = true;
 	}
 
-	std::cout << static_cast<int>(((users.first->getCenter().second-80) / 48.0f))*48 << std::endl;
-
 	if (bombList.first != nullptr) {
 		
 		bombList.first->update();
@@ -124,24 +164,39 @@ void Play::update()
 		else if (!bombList.first->doCollide(*users.first)) {
 			bombList.first->collideWithPlayer = true;
 		}
+		users.second->correctPosition(bombList.first);
 
 		if (bombList.first->isExploding) {
 			bool isBlock = false;
 			for (int j = 0; j < 3 && !isBlock; ++j) {
 				if (board[bombList.first->getCenter().first / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48] != nullptr) {
-					switch (board[bombList.first->getCenter().first / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->whoIam) {
+					switch (board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->whoIam) {
 					case TIPO_CASILLA::BLOQUE:
 						isBlock = true;
 						break;
 					case TIPO_CASILLA::MURO:
 						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = bombList.first->photo.placeholder.x + j * 48;
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = (bombList.first->photo.placeholder.y);
+						users.first->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x;
-						localY = board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER2:{
+						users.first->score += 100;
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->harm();
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48 + 80;
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = localX;
+						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER1:
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
 						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
 						board[bombList.first->photo.placeholder.x / 48 + j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48+80;
@@ -167,12 +222,26 @@ void Play::update()
 					case TIPO_CASILLA::MURO:
 						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = bombList.first->photo.placeholder.x - j * 48;
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = (bombList.first->photo.placeholder.y);
+						users.first->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x;
-						localY = board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER2: {
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						users.first->score += 100;
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->harm();
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48 + 80;
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = localX;
+						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER1:
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
 						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
 						board[bombList.first->photo.placeholder.x / 48 - j][(bombList.first->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48 + 80;
@@ -198,12 +267,26 @@ void Play::update()
 					case TIPO_CASILLA::MURO:
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->harm();
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = bombList.first->photo.placeholder.x;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = (bombList.first->photo.placeholder.y) + j*48;
+						users.first->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x;
-						localY = board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER2: {
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						users.first->score += 100;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->harm();
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = 48;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = 48 + 80;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = localX;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER1:
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->harm();
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = 48;
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = 48 + 80;
@@ -229,17 +312,31 @@ void Play::update()
 					case TIPO_CASILLA::MURO:
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->harm();
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = bombList.first->photo.placeholder.x;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = (bombList.first->photo.placeholder.y) - j*48;
+						users.first->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x;
-						localY = board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER2: {
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						users.first->score += 100;
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->harm();
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = 48;
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = 48 + 80;
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j] = new Explosion();
-						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = bombList.first->photo.placeholder.x / 48;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = localX;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER1:
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->harm();
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = 48;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = 48 + 80;
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j] = new Explosion();
+						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = localX;
 						board[bombList.first->photo.placeholder.x / 48][(bombList.first->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = localY;
 						break;
 					}
@@ -266,6 +363,7 @@ void Play::update()
 		else if (!bombList.second->doCollide(*users.second)) {
 			bombList.second->collideWithPlayer = true;
 		}
+		users.first->correctPosition(bombList.second);
 
 		if (bombList.second->isExploding) {
 			bool isBlock = false;
@@ -278,12 +376,26 @@ void Play::update()
 					case TIPO_CASILLA::MURO:
 						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = bombList.second->photo.placeholder.x + j * 48;
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = (bombList.second->photo.placeholder.y);
+						users.second->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x;
-						localY = board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER1: {
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						users.second->score += 100;
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->harm();
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48 + 80;
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = localX;
+						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER2:
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
 						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
 						board[bombList.second->photo.placeholder.x / 48 + j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48 + 80;
@@ -309,12 +421,26 @@ void Play::update()
 					case TIPO_CASILLA::MURO:
 						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = bombList.second->photo.placeholder.x - j * 48;
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = (bombList.second->photo.placeholder.y);
+						users.second->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x;
-						localY = board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER1: {
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						users.second->score += 100;
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->harm();
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48 + 80;
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = localX;
+						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER2:
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
 						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->harm();
 						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.x = 48;
 						board[bombList.second->photo.placeholder.x / 48 - j][(bombList.second->photo.placeholder.y - 80) / 48]->photo.placeholder.y = 48 + 80;
@@ -340,12 +466,26 @@ void Play::update()
 					case TIPO_CASILLA::MURO:
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->harm();
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = bombList.second->photo.placeholder.x;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = (bombList.second->photo.placeholder.y) + j*48;
+						users.second->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x;
-						localY = board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER1: {
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						users.second->score += 100;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->harm();
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = 48;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = 48 + 80;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = localX;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER2:
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->harm();
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.x = 48;
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 + j]->photo.placeholder.y = 48 + 80;
@@ -371,25 +511,41 @@ void Play::update()
 					case TIPO_CASILLA::MURO:
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->harm();
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = bombList.second->photo.placeholder.x;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = (bombList.second->photo.placeholder.y) - j * 48;
+						users.second->score += 15;
 						isBlock = true;
 						break;
-					case TIPO_CASILLA::PLAYER:
-						int localX, localY;
-						localX = board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x;
-						localY = board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y;
+					case TIPO_CASILLA::PLAYER1: {
+						int localX = static_cast<int>((users.first->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.first->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						users.second->score += 100;
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->harm();
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = 48;
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = 48 + 80;
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j] = new Explosion();
-						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = bombList.second->photo.placeholder.x / 48;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = localX;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = localY;
+						break;
+					}
+					case TIPO_CASILLA::PLAYER2:
+						int localX = static_cast<int>((users.second->getCenter().first / 48.0f)) * 48;
+						int localY = static_cast<int>(((users.second->getCenter().second - 80) / 48.0f)) * 48 + 80;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->harm();
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = 48;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = 48 + 80;
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j] = new Explosion();
+						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = localX;
 						board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = localY;
 						break;
 					}
 				}
 				else {
+					//PARA QUE LA EXPLOSION NO REPELA AL PJ
 					board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j] = new Explosion();
 					board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.x = bombList.second->photo.placeholder.x;
 					board[bombList.second->photo.placeholder.x / 48][(bombList.second->photo.placeholder.y - 80) / 48 - j]->photo.placeholder.y = (bombList.second->photo.placeholder.y) - j * 48;
+
 				}
 			}
 			bombList.second = nullptr;
@@ -397,6 +553,52 @@ void Play::update()
 			users.second->myBomb = nullptr;
 		}
 
+	}
+
+
+
+	if (users.first->vidas <= 0 || users.second->vidas <= 0 || interfaz->timer <= 0) {
+		if (auxTime == 256)
+			auxTime = interfaz->timer;
+		if (auxTime - interfaz->timer >= 1000) {
+			bool empate = false;
+			if (users.first->vidas <= 0 && users.second->vidas <= 0) {
+				//EMPATE
+				empate = true;
+				std::cout << "Habéis empatado!" << std::endl;
+			}
+			else if (users.first->vidas <= 0) {
+				//GANA PJ2
+				std::cout << "Enhorabuena Jugador2. Has ganado!" << std::endl;
+			}
+			else if (users.second->vidas <= 0) {
+				//GANA PJ1
+				std::cout << "Enhorabuena Jugador1. Has ganado!" << std::endl;
+			}
+			else {
+				//LOS DOS ESTÁN VIVOS
+				if (users.first->score == users.second->score) {
+					//EMPATE
+					empate = true;
+					std::cout << "Habéis empatado!" << std::endl;
+				}
+				else if (users.first->score < users.second->score) {
+					//GANA PJ2
+					std::cout << "Enhorabuena Jugador2. Has ganado!" << std::endl;
+				}
+				else {
+					//GANA PJ1
+					std::cout << "Enhorabuena Jugador1. Has ganado!" << std::endl;
+				}
+			}
+
+			if (!empate) {
+				std::cout << "Introduce tu nombre: " << std::endl;
+				std::string winnerName;
+				std::getline(std::cin, winnerName);
+			}
+			CurrentGameState = GAME_STATE::MENU;
+		}
 	}
 }
 

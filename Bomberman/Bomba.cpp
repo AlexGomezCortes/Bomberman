@@ -8,7 +8,7 @@ Bomba::Bomba()
 
 Bomba::Bomba(std::pair<int, int> coord) 
 {
-	whoIam = TIPO_CASILLA::BOMBA;
+	
 	photo.placeholder.x = coord.first - 48 / 2;
 	photo.placeholder.y = coord.second - 48 / 2;
 

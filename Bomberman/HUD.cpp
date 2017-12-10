@@ -76,17 +76,18 @@ HUD::~HUD()
 void HUD::update() {
 	float deltaTime = clock() - lastTime;
 
-	displayScore.first.msg = "Vidas: " + std::to_string(m_users.first->score);
+	displayScore.first.msg = "Score: " + std::to_string(m_users.first->score);
 	Renderer::Instance()->loadText(displayScore.first, displayScore.first.id);
-	displayScore.second.msg = "Vidas: " + std::to_string(m_users.second->score);
+	displayScore.second.msg = "Score: " + std::to_string(m_users.second->score);
 	Renderer::Instance()->loadText(displayScore.second, displayScore.second.id);
 
-	displayVidas.first.msg = "Score: " + std::to_string(m_users.first->vidas);
+	displayVidas.first.msg = "Vidas: " + std::to_string(m_users.first->vidas);
 	Renderer::Instance()->loadText(displayVidas.first, displayVidas.first.id);
-	displayVidas.second.msg = "Score: " + std::to_string(m_users.second->vidas);
+	displayVidas.second.msg = "Vidas: " + std::to_string(m_users.second->vidas);
 	Renderer::Instance()->loadText(displayVidas.second, displayVidas.second.id);
 
 	timer -= deltaTime;
+	std::cout << timer << std::endl;
 	displayTime.msg = std::to_string(static_cast<int>(timer/1000));
 	Renderer::Instance()->loadText(displayTime, displayTime.id);
 
